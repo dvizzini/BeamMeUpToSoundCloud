@@ -118,17 +118,6 @@ function soundcloud_after_save_item($item)
 
 	if($_POST["PostToSoundCloudBool"] == '1') {
 
-		// Soundcloud.php
-		// $client = new Services_SoundCloud(get_option('client_id'), get_option('client_secret'), get_option('redirect_uri'));
-		// $client->setAccessToken(get_option('access_token'));
-// 
-		// while(loop_files_for_item())
-		// {
-			// echo $client->post('tracks', array('track[title]' => item_file('original filename'), 'track[asset_data]' => '@'.FILES_DIR.'/'.item_file('archive filename'), 'track[sharing]' => ((get_option('soundcloud_public_default_bool') == '1') ? 'public' : 'private')));
-			// print_r(array('track[title]' => item_file('original filename'), 'track[asset_data]' => '@'.FILES_DIR.'/'.item_file('archive filename'), 'track[sharing]' => ((get_option('soundcloud_public_default_bool') == '1') ? 'public' : 'private')));
-			// file_download_uri($whatever);
-		// }
-				
 		/**
 		 * @param $first true if this is the first PUT to the bucket, false otherwise 
 		 * @param $fileToBePut the Omeka file to by uploaded to the Internet Archive 
@@ -149,7 +138,6 @@ function soundcloud_after_save_item($item)
 			curl_setopt($cURL, CURLOPT_POSTFIELDS, array('oauth_token'=>get_option('access_token'),'track[asset_data]'=>'@'.FILES_DIR.'/'.item_file('archive filename'),'track[title]'=>item_file('original filename'),'track[sharing]'=>(($_POST["SoundCloudPublicBool"] == '1') ? 'public' : 'private')));
 			curl_setopt($cURL, CURLOPT_RETURNTRANSFER, TRUE);
 			
-			print_r(array('oauth_token'=>get_option('access_token'),'track[asset_data]'=>'@'.FILES_DIR.'/'.item_file('archive filename'),'track[title]'=>item_file('archive filename'),'track[sharing]'=>(($_POST["SoundCloudPublicBool"] == '1') ? 'public' : 'private')));
 			curl_exec($cURL);
 			print_r(curl_getinfo($cURL));
 			echo file_download_uri($whatever);
@@ -181,13 +169,21 @@ function soundcloud_after_save_item($item)
 			curl_multi_exec($curlMultiHandle,$flag);
 			} while ($flag > 0);			
 		}
+		
+		//from Soundcloud.php
+		$mimeTypes = array('video/mp4','video/mp4','audio/x-aiff','audio/flac','audio/mpeg','audio/ogg','audio/x-wav');
 
 		//set item
 		set_current_item($item);
 		
 		while(loop_files_for_item())
 		{
-			curl_exec(getCurlObject(get_current_file()));
+			echo item_file('MIME Type');
+			if (in_array(item_file('MIME Type'), $mimeTypes))
+			{
+				echo 'in if for '.item_type('original filename');
+				curl_exec(getCurlObject(get_current_file()));			
+			}
 		}
 
 		//throws uncaught error for debugging
