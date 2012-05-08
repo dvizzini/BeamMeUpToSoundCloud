@@ -135,12 +135,15 @@ function soundcloud_after_save_item($item)
 		    curl_setopt($cURL, CURLOPT_LOW_SPEED_TIME, 180);
 		    curl_setopt($cURL, CURLOPT_NOSIGNAL, 1);
 			curl_setopt($cURL, CURLOPT_POST, 1);
-			curl_setopt($cURL, CURLOPT_POSTFIELDS, array('oauth_token'=>get_option('access_token'),'track[asset_data]'=>'@'.FILES_DIR.'/'.item_file('archive filename'),'track[title]'=>item_file('original filename'),'track[sharing]'=>(($_POST["SoundCloudPublicBool"] == '1') ? 'public' : 'private')));
+			curl_setopt($cURL, CURLOPT_POSTFIELDS, array('oauth_token'=>get_option('access_token'),'track[asset_data]'=>'@'.FILES_DIR.'/'.item_file('archive filename'),'track[title]'=>preg_replace('/(\s+)/','_',item_file('original filename')),'track[sharing]'=>(($_POST["SoundCloudPublicBool"] == '1') ? 'public' : 'private')));
 			curl_setopt($cURL, CURLOPT_RETURNTRANSFER, TRUE);
-			
+
+			print_r(array('oauth_token'=>get_option('access_token'),'track[asset_data]'=>'@'.FILES_DIR.'/'.item_file('archive filename'),'track[title]'=>item_file('original filename'),'track[sharing]'=>(($_POST["SoundCloudPublicBool"] == '1') ? 'public' : 'private')));
 			curl_exec($cURL);
 			print_r(curl_getinfo($cURL));
-			echo file_download_uri($whatever);
+			
+			//uncomment for debugging
+			// file_download_uri($whatever);
 			
 			return $cURL;
 		}
@@ -181,7 +184,7 @@ function soundcloud_after_save_item($item)
 			echo item_file('MIME Type');
 			if (in_array(item_file('MIME Type'), $mimeTypes))
 			{
-				echo 'in if for '.item_type('original filename');
+				echo 'in if for '.item_file('original filename');
 				curl_exec(getCurlObject(get_current_file()));			
 			}
 		}
