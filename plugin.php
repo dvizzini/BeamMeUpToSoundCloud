@@ -15,7 +15,7 @@ add_plugin_hook('config_form', 'soundcloud_config_form');
 add_plugin_hook('config', 'soundcloud_config');
 add_plugin_hook('admin_append_to_items_form_files', 'soundcloud_admin_append_to_items_form_files');
 add_plugin_hook('after_save_item', 'soundcloud_after_save_item');
-add_plugin_hook('admin_append_to_items_show_secondary', 'soundcloud_admin_append_to_items_show_secondary');
+//add_plugin_hook('admin_append_to_items_show_secondary', 'soundcloud_admin_append_to_items_show_secondary');
 
 // Hook Functions
 
