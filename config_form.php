@@ -129,7 +129,7 @@
 		
 		<div id="loggedIn">
 			<h2>You have logged in. Your token is <?php echo get_option('access_token') ?></h2>
-			<h3>If you would like to log in with a different SoundCloud app, you must uninstall this plugin and recreate with this different app.</h3>
+			<h3>If you would like to log in with a different SoundCloud app, you must uninstall this plugin and recreate it with this different different app.</h3>
 		</div>
 		
 		<div id="stepOne">

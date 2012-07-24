@@ -41,7 +41,7 @@ function soundcloud_admin_append_to_items_form_files() {
 	<span><b>Upload to SoundCloud</b></span>
 	<input type="hidden" name="PostToSoundCloudBool" value="0">
 	<input type="checkbox" name="PostToSoundCloudBool" value="1" <?php if(get_option('post_to_soundcloud_default_bool') == '1') {echo 'checked';} ?>>
-	<div><em>Note that if this box is checked, saving the item may take a while.</em></div>
+	<div><em>Note that if this boxw is checked, saving the item may take a while.</em></div>
 	<!--TODO: Must files be uniquely named? If, so warn here -->
 	</br>
 	<span><b>Make Public on SoundCloud</b></span>
@@ -139,7 +139,7 @@ function soundcloud_after_save_item($item)
 			curl_setopt($cURL, CURLOPT_RETURNTRANSFER, TRUE);
 
 			print_r(array('oauth_token'=>get_option('access_token'),'track[asset_data]'=>'@'.FILES_DIR.'/'.item_file('archive filename'),'track[title]'=>item_file('original filename'),'track[sharing]'=>(($_POST["SoundCloudPublicBool"] == '1') ? 'public' : 'private')));
-			curl_exec($cURL);
+			//curl_exec($cURL);
 			print_r(curl_getinfo($cURL));
 			
 			//uncomment for debugging
@@ -174,16 +174,19 @@ function soundcloud_after_save_item($item)
 		}
 		
 		//from Soundcloud.php
-		$mimeTypes = array('video/mp4','video/mp4','audio/x-aiff','audio/flac','audio/mpeg','audio/ogg','audio/x-wav');
+		$mimeTypes = array('audio/mp4','video/mp4','audio/x-aiff','audio/flac','audio/mpeg','audio/ogg','audio/x-wav');
 
 		//set item
 		set_current_item($item);
 		
 		while(loop_files_for_item())
 		{
+			echo 'MIME Type:';
 			echo item_file('MIME Type');
-			if (in_array(item_file('MIME Type'), $mimeTypes))
+			$notUploaded = TRUE;
+			if (in_array(item_file('MIME Type'), $mimeTypes) && $notUploaded)
 			{
+				$notUploaded = FALSE;
 				echo 'in if for '.item_file('original filename');
 				curl_exec(getCurlObject(get_current_file()));			
 			}
